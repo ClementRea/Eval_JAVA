@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Séances - Tracker d'Entraînement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2">Mes Séances</h1>
+        <div>
+            <a href="/web/workouts/add" class="btn btn-success me-2">Nouvelle séance</a>
+            <a href="/web" class="btn btn-outline-primary">← Accueil</a>
+        </div>
+    </div>
+
+    <!-- Messages flash -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${success}">Message de succès</span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="row">
+        <div class="col-12" th:each="workout : ${workouts}">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="card-title mb-1" th:text="${workout.name}">Nom séance</h5>
+                            <p class="card-text text-muted mb-1" th:text="${workout.notes}">Notes</p>
+                            <small class="text-muted">
+                                <span th:text="${#temporals.format(workout.date, 'dd/MM/yyyy HH:mm')}">Date</span>
+                                <span th:if="${workout.duration}" class="ms-2">
+                                        • <span th:text="${workout.duration}">0</span> min
+                                    </span>
+                            </small>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <div class="btn-group" role="group">
+                                <a th:href="@{/web/workouts/{id}(id=${workout.id})}" class="btn btn-success btn-sm">
+                                    Détails
+                                </a>
+                                <a th:href="@{/web/workouts/edit/{id}(id=${workout.id})}" class="btn btn-warning btn-sm">
+                                    Modifier
+                                </a>
+                                <form th:action="@{/web/workouts/delete/{id}(id=${workout.id})}" method="post"
+                                      style="display: inline;"
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette séance ?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center" th:if="${#lists.isEmpty(workouts)}">
+        <div class="alert alert-info">
+            <h5>Aucune séance trouvée</h5>
+            <p class="mb-0">Aucune séance d'entraînement enregistrée.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

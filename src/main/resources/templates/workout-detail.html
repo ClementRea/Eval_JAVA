@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="'Détail - ' + ${workout.name}">Détail Séance</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2" th:text="${workout.name}">Nom de la séance</h1>
+    <a href="/web/workouts" class="btn btn-outline-success">← Retour aux séances</a>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Informations</h5>
+        </div>
+        <div class="card-body">
+          <p><strong>Date :</strong><br>
+            <span th:text="${#temporals.format(workout.date, 'dd/MM/yyyy HH:mm')}">-</span>
+          </p>
+          <p th:if="${workout.duration}">
+            <strong>Durée :</strong><br>
+            <span th:text="${workout.duration} + ' minutes'">-</span>
+          </p>
+          <p th:if="${workout.notes}">
+            <strong>Notes :</strong><br>
+            <span th:text="${workout.notes}" class="text-muted">-</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Exercices réalisés</h5>
+        </div>
+        <div class="card-body">
+          <div th:if="${#lists.isEmpty(exercises)}">
+            <p class="text-muted">Aucun exercice enregistré pour cette séance.</p>
+          </div>
+          <div th:if="${not #lists.isEmpty(exercises)}">
+            <div class="row">
+              <div th:each="ex : ${exercises}" class="col-12 mb-3">
+                <div class="border rounded p-3">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <h6 class="mb-1" th:text="${ex.exercise.name}">Exercice</h6>
+                      <span class="badge bg-light text-dark" th:text="${ex.exercise.category.displayName}">Catégorie</span>
+                    </div>
+                    <div class="text-end">
+                      <div class="fs-5 fw-bold text-primary">
+                        <span th:text="${ex.sets}">3</span> ×
+                        <span th:text="${ex.reps}">10</span>
+                      </div>
+                      <div th:if="${ex.weight}" class="text-success">
+                        <span th:text="${ex.weight} + ' kg'">80 kg</span>
+                      </div>
+                      <div th:unless="${ex.weight}" class="text-muted">
+                        Poids du corps
+                      </div>
+                    </div>
+                  </div>
+                  <div th:if="${ex.notes}" class="mt-2">
+                    <span th:text="${ex.notes}">Notes</span></small>
+                  </div>
+                  <div th:if="${ex.restTime}" class="mt-1">
+                    <small class="text-info">Repos: <span th:text="${ex.restTime}">120</span>s</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
